@@ -1,7 +1,7 @@
 const express = require('express');
-const path = require('path');
+// const path = require('path'); -- Changed to Graphql API
 const db = require('./config/connection');
-// const routes = require('./routes'); -- Change to Graphql API
+// const routes = require('./routes'); -- Changed to Graphql API
 const { authMidlware } = require('./utils/auth');
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schemas');
@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3001;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: authMidlware,
 });
 
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
-// app.use(routes); -- Change to Graphql API
+// app.use(routes); -- Changed to Graphql API
 
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
