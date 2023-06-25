@@ -7,6 +7,8 @@ import {
   Card,
   Row
 } from 'react-bootstrap';
+//import the SAVE_BOOK mutation to be used in this file
+import { SAVE_BOOK } from '../utils/mutations';
 
 import Auth from '../utils/auth';
 import { saveBook, searchGoogleBooks } from '../utils/API';
@@ -72,14 +74,20 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await saveBook(bookToSave, token);
+      const { data } = await saveBook({
+        variables: { input: { ...bookToSave } },
+      });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // Replaced to convert to Graphql 
+      // const response = await saveBook(bookToSave, token);
+
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      console.log(data);
     } catch (err) {
       console.error(err);
     }
